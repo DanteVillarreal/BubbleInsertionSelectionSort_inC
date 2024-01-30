@@ -1,0 +1,148 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+GDB online is an online compiler and debugger tool for C, C++, Python, Java, PHP, Ruby, Perl,
+C#, OCaml, VB, Swift, Pascal, Fortran, Haskell, Objective-C, Assembly, HTML, CSS, JS, SQLite, Prolog.
+Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <stdio.h>
+#include <stdbool.h>
+#include <stdlib.h>
+#include <time.h>
+#include <string.h>
+
+void insertionSort(int arr[], int n) 
+{
+    int i;
+    int j;
+    int temporaryVar;
+    for (i = 1; i < n; i++) 
+    {
+        temporaryVar = arr[i];
+        j = i - 1;
+        while (j >= 0   &&  arr[j] > temporaryVar) 
+        {
+            arr[j + 1] = arr[j];
+            j = j - 1;
+        }
+        arr[j + 1] = temporaryVar;
+    }
+}
+
+
+
+void selectionSort(int arr[], int n) 
+{
+    int i;
+    int j;
+    int minIndex;
+    for (i = 0; i < n-1; i++) 
+    {
+        minIndex = i;
+        for (j = i+1; j < n; j++)
+        {
+            if (arr[j] < arr[minIndex])
+            {
+                minIndex = j;
+            }
+        }
+        if (i != minIndex) 
+        {
+            int temporaryVar = arr[minIndex];
+            arr[minIndex] = arr[i];
+            arr[i] = temporaryVar;
+        }
+    }
+}
+
+
+
+
+
+void bubbleSort(int arr[], int n) 
+{
+    int i;
+    int j;
+    bool swapped;
+    for (i = 0; i < n-1; i++) 
+    {
+        swapped = false;
+        for (j = 0; j < n-i-1; j++) 
+        {
+            if (arr[j] > arr[j+1]) 
+            {
+                int temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+                swapped = true;
+            }
+        }
+        if (swapped == false)
+            break;
+    }
+}
+
+
+
+int main() 
+{
+    // Seeds the rand # generater
+    srand(time(0)); 
+
+    int arraySizes[] = {5, 10, 20, 100, 1000, 10000, 20000, 50000, 100000};
+    int numberOfSizes = sizeof(arraySizes) / sizeof(arraySizes[0]);
+
+    for (int i = 0; i < numberOfSizes; i++) 
+    {
+        int n = arraySizes[i];
+        int* arr = malloc(n * sizeof(int)); // Allocate memory for the array
+
+        // Fill the array with random numbers
+        for (int j = 0; j < n; j++) 
+        {
+            // Generates the rand # between 0 and n*10
+            arr[j] = rand() % (n * 10); 
+        }
+
+        // Allocates memory for the copies
+        int *array_insertion = malloc(n * sizeof(int));
+        int *array_selection = malloc(n * sizeof(int));
+        int *array_bubble = malloc(n * sizeof(int));
+
+        //copies the contents of arr into each array_... 
+        memcpy(array_insertion, arr, n * sizeof(int));
+        memcpy(array_selection, arr, n * sizeof(int));
+        memcpy(array_bubble, arr, n * sizeof(int));
+
+        // Test time elapsed for the algos
+        clock_t start, end;
+        double cpu_time_used;
+
+        start = clock();
+        insertionSort(array_insertion, n);
+        end = clock();
+        cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("Array size: %d, Time elapsed for Insertion Sort: %f\n", n, cpu_time_used);
+
+        start = clock();
+        selectionSort(array_selection, n);
+        end = clock();
+        cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("Array size: %d, Time elapsed for Selection Sort: %f\n", n, cpu_time_used);
+
+        start = clock();
+        bubbleSort(array_bubble, n);
+        end = clock();
+        cpu_time_used = ((double) (end - start)) / CLOCKS_PER_SEC;
+        printf("Array size: %d, Time elapsed for Bubble Sort: %f\n", n, cpu_time_used);
+
+        // Free the allocated memory
+        free(arr);
+        free(array_insertion);
+        free(array_selection);
+        free(array_bubble);
+    }
+
+    return 0;
+}
